@@ -1,17 +1,16 @@
-drop table if exists `users`;
-drop table if exists `authorities`;
-CREATE TABLE `users`
+drop table if exists `user`;
+drop table if exists `authority`;
+CREATE TABLE `user`
 (
     `id`       INT         NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(45) NOT NULL,
     `password` VARCHAR(45) NOT NULL,
-    `enabled`  INT         NOT NULL,
     PRIMARY KEY (`id`)
 );
-CREATE TABLE `authorities`
+CREATE TABLE `authority`
 (
     `id`        INT         NOT NULL AUTO_INCREMENT,
-    `username`  VARCHAR(45) NOT NULL,
-    `authority` VARCHAR(45) NOT NULL,
+    `name`  VARCHAR(45) NOT NULL,
+    `user` VARCHAR(45) NOT NULL,
     PRIMARY KEY (`id`)
 );
