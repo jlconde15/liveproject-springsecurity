@@ -4,6 +4,9 @@
 
 package com.healthx.milestone1.models;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 /**
