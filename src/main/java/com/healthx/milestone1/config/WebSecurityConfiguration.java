@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -29,7 +30,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -42,12 +43,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.formLogin();
 
         http.csrf(c -> c.ignoringAntMatchers(
-                "/users/**", "/clients/**"
+                "/users/**", "/clients/**", "/h2-console/**"
         ));
 
         http.authorizeRequests()
                 .mvcMatchers("/users/**").permitAll()
-                .mvcMatchers("/clients/**").permitAll();
+                .mvcMatchers("/clients/**").permitAll()
+                .mvcMatchers("/h2-console/**").permitAll();
         super.configure(http);
         http.headers().frameOptions().disable();
     }

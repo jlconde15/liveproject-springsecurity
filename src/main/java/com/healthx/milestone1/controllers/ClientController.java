@@ -7,6 +7,7 @@ package com.healthx.milestone1.controllers;
 import com.healthx.milestone1.models.Client;
 import com.healthx.milestone1.repositories.ClientRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.*;
 public class ClientController {
 
     private final ClientRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public ClientController(ClientRepository repository) {
+    public ClientController(ClientRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping
@@ -31,6 +34,7 @@ public class ClientController {
             throw new ClientAlreadyExistsException("The client already exists");
         }
         else {
+            client.setSecret(passwordEncoder.encode(client.getSecret()));
             client.getGrantTypes().forEach(gt -> gt.setClient(client));
             return repository.save(client);
         }
