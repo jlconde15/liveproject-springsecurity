@@ -13,6 +13,8 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
+import javax.sql.DataSource;
+
 /**
  * @author jose
  */
@@ -26,12 +28,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     private final JwtAccessTokenConverter converter;
 
-    public AuthorizationServerConfig(AuthenticationManager authenticationManager,
-                                            TokenStore tokenStore,
-                                            JwtAccessTokenConverter converter) {
+    private final DataSource datasource;
+
+    public AuthorizationServerConfig(AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter converter, DataSource datasource) {
         this.authenticationManager = authenticationManager;
         this.tokenStore = tokenStore;
         this.converter = converter;
+        this.datasource = datasource;
     }
 
     @Override
@@ -43,10 +46,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory()
+        clients.jdbc(datasource);
+        /*clients.inMemory()
                 .withClient("client")
                 .secret("secret")
                 .authorizedGrantTypes("authorization_code", "password", "refresh_token")
-                .scopes("read");
+                .scopes("read");*/
     }
 }
