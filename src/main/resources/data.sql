@@ -6,5 +6,5 @@ INSERT INTO oauth_client_details
  web_server_redirect_uri, authorities, access_token_validity,
  refresh_token_validity, additional_information, autoapprove)
 VALUES
-('fooClientIdPassword', 'secret', 'foo,read,write',
+('myClientId', 'mySecret', 'foo,read,write',
     'password,authorization_code,refresh_token', null, null, 36000, 36000, null, true);

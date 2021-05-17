@@ -7,10 +7,8 @@ package com.healthx.milestone1.controllers;
 import com.healthx.milestone1.models.Client;
 import com.healthx.milestone1.models.ClientDto;
 import com.healthx.milestone1.repositories.ClientRepository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author jose
@@ -26,6 +24,7 @@ public class ClientController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Client register(@RequestBody ClientDto clientDto){
         Client client = new Client();
         client.setClient_id(clientDto.getClientID());
