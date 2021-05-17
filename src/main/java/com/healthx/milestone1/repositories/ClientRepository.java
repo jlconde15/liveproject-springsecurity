@@ -5,7 +5,6 @@
 package com.healthx.milestone1.repositories;
 
 import com.healthx.milestone1.models.Client;
-import com.healthx.milestone1.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -15,4 +14,5 @@ import java.util.Optional;
  */
 
 public interface ClientRepository extends JpaRepository<Client, String> {
+    Optional<Client> findClientByClientId(String clientId);
 }

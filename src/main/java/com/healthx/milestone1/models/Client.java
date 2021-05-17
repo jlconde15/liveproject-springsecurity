@@ -4,49 +4,51 @@
 
 package com.healthx.milestone1.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author jose
  */
 
 @Entity
-@Table(name = "oauth_client_details")
 public class Client {
 
     @Id
-    private String client_id;
-    private String resource_ids;
-    private String client_secret;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @Column(name = "client_id")
+    private String clientId;
+    private String secret;
     private String scope;
-    private String authorized_grant_types;
-    private String web_server_redirect_uri;
-    private String authorities;
+    @Column(name = "rediect_uri")
+    private String rediectUri;
+    @OneToMany(mappedBy = "client", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private List<ClientGrantType> grantTypes;
 
-    public String getClient_id() {
-        return client_id;
+    public Integer getId() {
+        return id;
     }
 
-    public void setClient_id(String client_id) {
-        this.client_id = client_id;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public String getResource_ids() {
-        return resource_ids;
+    public String getClientId() {
+        return clientId;
     }
 
-    public void setResource_ids(String resource_ids) {
-        this.resource_ids = resource_ids;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
-    public String getClient_secret() {
-        return client_secret;
+    public String getSecret() {
+        return secret;
     }
 
-    public void setClient_secret(String client_secret) {
-        this.client_secret = client_secret;
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
     public String getScope() {
@@ -57,27 +59,32 @@ public class Client {
         this.scope = scope;
     }
 
-    public String getAuthorized_grant_types() {
-        return authorized_grant_types;
+    public String getRediectUri() {
+        return rediectUri;
     }
 
-    public void setAuthorized_grant_types(String authorized_grant_types) {
-        this.authorized_grant_types = authorized_grant_types;
+    public void setRediectUri(String rediectUri) {
+        this.rediectUri = rediectUri;
     }
 
-    public String getWeb_server_redirect_uri() {
-        return web_server_redirect_uri;
+    public List<ClientGrantType> getGrantTypes() {
+        return grantTypes;
     }
 
-    public void setWeb_server_redirect_uri(String web_server_redirect_uri) {
-        this.web_server_redirect_uri = web_server_redirect_uri;
+    public void setGrantTypes(List<ClientGrantType> grantTypes) {
+        this.grantTypes = grantTypes;
     }
 
-    public String getAuthorities() {
-        return authorities;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return id == client.id;
     }
 
-    public void setAuthorities(String authorities) {
-        this.authorities = authorities;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

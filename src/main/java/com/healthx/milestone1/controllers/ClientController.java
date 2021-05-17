@@ -5,16 +5,16 @@
 package com.healthx.milestone1.controllers;
 
 import com.healthx.milestone1.models.Client;
-import com.healthx.milestone1.models.ClientDto;
 import com.healthx.milestone1.repositories.ClientRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * @author jose
  */
 @RestController
-@RequestMapping("/register")
+@RequestMapping("/clients")
 public class ClientController {
 
     private final ClientRepository repository;
@@ -25,14 +25,15 @@ public class ClientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Client register(@RequestBody ClientDto clientDto){
-        Client client = new Client();
-        client.setClient_id(clientDto.getClientID());
-        client.setClient_secret(clientDto.getSecret());
-        client.setScope(clientDto.getScopes());
-        client.setAuthorized_grant_types(clientDto.getGrantTypes());
+    public Client register(@RequestBody Client client) {
 
-        return repository.save(client);
+        if (repository.findClientByClientId(client.getClientId()).isPresent()){
+            throw new ClientAlreadyExistsException("The client already exists");
+        }
+        else {
+            client.getGrantTypes().forEach(gt -> gt.setClient(client));
+            return repository.save(client);
+        }
     }
 
 }

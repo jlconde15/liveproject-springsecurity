@@ -28,8 +28,8 @@ class Milestone1ApplicationTests {
                 post("/oauth/token")
                         .with(httpBasic("myClientId", "mySecret"))
                         .queryParam("grant_type", "password")
-                        .queryParam("username", "john")
-                        .queryParam("password", "555")
+                        .queryParam("username", "jose")
+                        .queryParam("password", "password")
                         .queryParam("scope", "read")
         )
                 .andExpect(jsonPath("$.access_token").exists())
@@ -40,16 +40,17 @@ class Milestone1ApplicationTests {
     @DisplayName("Register a new client")
     public void testRegisterNewClient() throws Exception {
         mvc.perform(
-                post("/register")
+                post("/clients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
-                                "    \"clientID\" : \"myNewClient\",\n" +
-                                "    \"secret\" : \"superSecret\",\n" +
-                                "    \"scopes\" : \"read\",\n" +
-                                "    \"grantTypes\" : \"password\"\n" +
+                                "    \"clientId\" : \"aClientId\",\n" +
+                                "    \"secret\" : \"aSecret\",\n" +
+                                "    \"scope\" : \"read\",\n" +
+                                "    \"rediectUri\" : \"http://localhost:8080/profile\",\n" +
+                                "    \"grantTypes\" : [{\"grantType\" : \"password\"}]\n" +
                                 "}")
         )
-                .andExpect(jsonPath("$.client_id").exists())
+                .andExpect(jsonPath("$.clientId").exists())
                 .andExpect(status().isCreated());
     }
 
@@ -62,7 +63,7 @@ class Milestone1ApplicationTests {
                         .content("{\n" +
                                 "    \"username\" : \"lukas\",\n" +
                                 "    \"password\" : \"99999\",\n" +
-                                "    \"authorities\" : [\"WRITE\"]\n" +
+                                "    \"authorities\" : [{\"name\" : \"WRITE\"}]\n" +
                                 "}")
         )
                 .andExpect(jsonPath("$.username").exists())
@@ -74,33 +75,34 @@ class Milestone1ApplicationTests {
     public void testAccessTokenForNewClient() throws Exception {
         mvc.perform(
                 post("/oauth/token")
-                        .with(httpBasic("aNewClient", "superMegaSecret"))
+                        .with(httpBasic("myOtherClientId", "myOtherSecret"))
                         .queryParam("grant_type", "password")
-                        .queryParam("username", "john")
-                        .queryParam("password", "555")
+                        .queryParam("username", "jose")
+                        .queryParam("password", "password")
                         .queryParam("scope", "read")
         )
                 .andExpect(status().isUnauthorized());
 
         mvc.perform(
-                post("/register")
+                post("/clients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
-                                "    \"clientID\" : \"aNewClient\",\n" +
-                                "    \"secret\" : \"superMegaSecret\",\n" +
-                                "    \"scopes\" : \"read\",\n" +
-                                "    \"grantTypes\" : \"password\"\n" +
+                                "    \"clientId\" : \"myOtherClientId\",\n" +
+                                "    \"secret\" : \"myOtherSecret\",\n" +
+                                "    \"scope\" : \"read\",\n" +
+                                "    \"rediectUri\" : \"http://localhost:8080/profile\",\n" +
+                                "    \"grantTypes\" : [{\"grantType\" : \"password\"}]\n" +
                                 "}")
         )
-                .andExpect(jsonPath("$.client_id").exists())
+                .andExpect(jsonPath("$.clientId").exists())
                 .andExpect(status().isCreated());
 
         mvc.perform(
                 post("/oauth/token")
-                        .with(httpBasic("aNewClient", "superMegaSecret"))
+                        .with(httpBasic("myOtherClientId", "myOtherSecret"))
                         .queryParam("grant_type", "password")
-                        .queryParam("username", "john")
-                        .queryParam("password", "555")
+                        .queryParam("username", "jose")
+                        .queryParam("password", "password")
                         .queryParam("scope", "read")
         )
                 .andExpect(jsonPath("$.access_token").exists())

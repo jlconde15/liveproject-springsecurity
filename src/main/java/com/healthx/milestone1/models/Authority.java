@@ -4,8 +4,7 @@
 
 package com.healthx.milestone1.models;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
@@ -19,7 +18,8 @@ public class Authority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    @JoinColumn(name = "user")
+    @JsonIgnore
+    @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
 

@@ -4,6 +4,7 @@
 
 package com.healthx.milestone1.config;
 
+import com.healthx.milestone1.services.JpaClientDetailsService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -30,11 +31,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     private final DataSource datasource;
 
-    public AuthorizationServerConfig(AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter converter, DataSource datasource) {
+    private final JpaClientDetailsService clientDetailsService;
+
+    public AuthorizationServerConfig(AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter converter, DataSource datasource, JpaClientDetailsService clientDetailsService) {
         this.authenticationManager = authenticationManager;
         this.tokenStore = tokenStore;
         this.converter = converter;
         this.datasource = datasource;
+        this.clientDetailsService = clientDetailsService;
     }
 
     @Override
@@ -46,6 +50,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.jdbc(datasource);
+        clients.withClientDetails(clientDetailsService);
     }
 }

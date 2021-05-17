@@ -17,7 +17,7 @@ public class User {
     private Integer id;
     private String username;
     private String password;
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Authority> authorities;
 
     public Integer getId() {
